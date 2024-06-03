@@ -1,0 +1,67 @@
+﻿<Window x:Class="WPFDemoPractice.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:WPFDemoPractice.UserControls"
+        mc:Ignorable="d"
+        WindowStartupLocation="CenterScreen"
+        Title="MainWindow" Height="450" Width="800" Icon="C:\Users\pca63\Desktop\WPF\WPFDemoPractice\WPFDemoPractice\Icons\AppLogo.ico">
+    <Window.Resources>
+        
+        <!--solid colors-->
+        <SolidColorBrush x:Key="backGroudColor" Color="SteelBlue"></SolidColorBrush>
+        <SolidColorBrush x:Key="gridBackGroundColor" Color="LightPink"></SolidColorBrush>
+        <SolidColorBrush x:Key="HoverBackGroundColor" Color="Olive"/>
+        <SolidColorBrush x:Key="PressedBackGroundColor" Color="DarkOliveGreen"/>
+        <SolidColorBrush x:Key="DisabledBackGroundColor" Color="#C5E0B4"/>
+        <SolidColorBrush x:Key="DisabledForeGroundColor" Color="#AFABAB"/>
+        
+        <!--triggers-->
+        <!--style for buttons -->
+        <Style x:Key="ButtonStyle" TargetType="{x:Type Button}">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border  Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="5">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="Background" Value="OliveDrab"/>
+            <Setter  Property="Foreground" Value="#FFFFFF"/>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="{StaticResource HoverBackGroundColor}"/>
+                </Trigger>
+                <Trigger Property="IsPressed" Value="True">
+                    <Setter Property="Background" Value="{StaticResource PressedBackGroundColor}"/>
+                </Trigger>
+                <Trigger Property="IsEnabled" Value="False">
+                    <Setter Property="Background" Value="{StaticResource DisabledBackGroundColor}"/>
+                    <Setter Property="Foreground" Value="{StaticResource DisabledForeGroundColor}"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+        
+    </Window.Resources>
+    <!--<Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="33*"/>
+            <RowDefinition Height="184*"/>
+        </Grid.RowDefinitions>
+        <TextBlock Height="20" HorizontalAlignment="Left" Margin="150,134,0,0" x:Name ="errormessage" VerticalAlignment="Top" Width="247"  OpacityMask="Crimson" Foreground="#FFE5572C" Grid.Row="1" />
+        <TextBlock HorizontalAlignment="Left" x:Name="txtSearchPlaceholder" Margin="115,22,0,0" TextWrapping="Wrap" Text="FirstName" VerticalAlignment="Top" Grid.Row="1"/>
+        <TextBlock HorizontalAlignment="Left" Margin="115,63,0,0" TextWrapping="Wrap" Text="LastName" VerticalAlignment="Top" Grid.Row="1"/>
+        <TextBox x:Name="tbFirstName"  HorizontalAlignment="Left" Margin="201,21,0,0" TextWrapping="Wrap"  VerticalAlignment="Top" Width="120" TextChanged="TextBox_TextChanged" Grid.Row="1">
+        </TextBox>
+        <TextBox x:Name="tbLastName" HorizontalAlignment="Left" Margin="202,59,0,0" TextWrapping="Wrap"  VerticalAlignment="Top" Width="120" Grid.Row="1"/>
+        <Button Content="Save" HorizontalAlignment="Left" Margin="203,109,0,0" VerticalAlignment="Top" Width="65" Click="Button_Click" Grid.Row="1"/>
+    </Grid>-->
+    <ContentControl x:Name="mainContent">
+        
+    </ContentControl>
+    
+</Window>
