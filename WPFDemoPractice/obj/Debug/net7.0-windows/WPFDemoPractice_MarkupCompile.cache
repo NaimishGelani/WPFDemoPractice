@@ -10,11 +10,11 @@ none
 false
 TRACE;DEBUG;NET;NET7_0;NETCOREAPP
 C:\Users\pca63\Desktop\WPF\WPFDemoPractice\WPFDemoPractice\App.xaml
-3-298160808
+5450456268
 
-9-1869237475
+14914438448
 2251579294028
-MainWindow.xaml;UserControls\LoginPage.xaml;UserControls\Registration.xaml;
+MainWindow.xaml;UserControls\DashBoard.xaml;UserControls\ForgotPassword.xaml;UserControls\LoginPage.xaml;UserControls\Registration.xaml;
 
 False
 

@@ -1,17 +1,34 @@
 ﻿using Microsoft.Identity.Client.NativeInterop;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.ListView;
+using System.Windows;
+using System.Windows.Input;
+using WPFDemoPractice.Commands;
+using WPFDemoPractice.DataBase;
+using WPFDemoPractice.Model;
 
 namespace WPFDemoPractice.ViewModel
 {
-    internal partial class RegistrationViewModel : IDataErrorInfo
+    internal partial class RegistrationViewModel : IDataErrorInfo, INotifyPropertyChanged
     {
+        private InsertData insertData;
+        public event EventHandler? ChangeWindowEvent;
+        protected virtual void OnChangeWindowEvent(EventArgs e)
+        {
+            ChangeWindowEvent?.Invoke(this, e);
+        }
+
+        public RegistrationViewModel()
+        {
+            insertData = new InsertData();
+        }
+
         private string firstName = string.Empty;
 
         public string FirstName
@@ -23,6 +40,7 @@ namespace WPFDemoPractice.ViewModel
             set
             {
                 firstName = value;
+                NotifyPropertyChanged("FirstName");
             }
         }
 
@@ -37,6 +55,7 @@ namespace WPFDemoPractice.ViewModel
             set
             {
                 lastName = value;
+                NotifyPropertyChanged("LastName");
             }
         }
 
@@ -51,6 +70,7 @@ namespace WPFDemoPractice.ViewModel
             set
             {
                 email = value;
+                NotifyPropertyChanged("Email");
             }
         }
 
@@ -65,6 +85,7 @@ namespace WPFDemoPractice.ViewModel
             set
             {
                 password = value;
+                NotifyPropertyChanged("Password");
             }
         }
 
@@ -79,10 +100,12 @@ namespace WPFDemoPractice.ViewModel
             set
             {
                 confirmPassword = value;
+                NotifyPropertyChanged("ConfirmPassword");
             }
         }
 
         private string address = string.Empty;
+
 
         public string Address
         {
@@ -93,9 +116,9 @@ namespace WPFDemoPractice.ViewModel
             set
             {
                 address = value;
+                NotifyPropertyChanged("Address");
             }
         }
-
 
         public string Error => string.Empty;
 
@@ -147,6 +170,86 @@ namespace WPFDemoPractice.ViewModel
         {
             string regexPattern = @"^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$";
             return Regex.IsMatch(emailAddress, regexPattern);
+        }
+
+
+        //private Registration registration;
+
+        //public Registration Registration
+        //{
+        //    get { return registration; }
+        //    set
+        //    {
+        //        registration = value;
+        //        NotifyPropertyChanged("Registration");
+        //    }
+        //}
+
+        //private ObservableCollection<Registration> registrations;
+
+        //public ObservableCollection<Registration> Registrations
+        //{
+        //    get { return registrations; }
+        //    set
+        //    {
+        //        registrations = value;
+        //        NotifyPropertyChanged("Registrations");
+        //    }
+        //}
+
+
+
+
+        private ICommand? addRegistrationCommand { get; set; }
+
+        public ICommand? AddRegistrationCommand
+        {
+            get
+            {
+                addRegistrationCommand ??= new RelayCommand(SubmitExecute, canSubmitExecute, false);
+                return addRegistrationCommand;
+            }
+        }
+
+        private void SubmitExecute(object parameter)
+        {
+            Registration registration = new()
+            {
+                FirstName = FirstName,
+                LastName = LastName,
+                Email = Email,
+                Address = Address,
+                Password = Password
+            };
+            bool isSave = insertData.RegistrationData(registration);
+            if (isSave)
+            {
+                OnChangeWindowEvent(EventArgs.Empty);
+            }
+        }
+
+        private bool canSubmitExecute(object parameter)
+        {
+            if (string.IsNullOrEmpty(FirstName) || string.IsNullOrEmpty(LastName) || string.IsNullOrEmpty(Email) || string.IsNullOrEmpty(Password) || string.IsNullOrEmpty(ConfirmPassword) || string.IsNullOrEmpty(Address))
+            {
+                return false;
+            }
+            else
+            {
+                return true;
+            }
+
+        }
+
+        public event PropertyChangedEventHandler? PropertyChanged;
+
+
+        protected void NotifyPropertyChanged(string propertyName)
+        {
+            if (PropertyChanged != null)
+            {
+                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+            }
         }
     }
 }

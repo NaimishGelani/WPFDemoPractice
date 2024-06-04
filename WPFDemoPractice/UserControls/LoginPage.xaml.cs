@@ -29,6 +29,21 @@ namespace WPFDemoPractice.UserControls
             textBoxEmail.Text = "Enter a EmailId..";
             textBoxEmail.GotFocus += RemoveText;
             textBoxEmail.LostFocus +=AddText;
+            loginViewModel.ChangeWindowEvent += ChangeWindow;
+        }
+
+        public void ChangeWindow(object? sender, EventArgs e)
+        {
+            DashBoard dashBoard = new();
+            MainWindow mainWindow = (MainWindow)Window.GetWindow(this);
+
+            if (mainWindow != null)
+            {
+                if (mainWindow.mainContent != null)
+                {
+                    mainWindow.mainContent.Content = dashBoard ;
+                }
+            }
         }
 
         public void RemoveText(object sender, EventArgs e)

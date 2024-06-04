@@ -26,6 +26,21 @@ namespace WPFDemoPractice.UserControls
             InitializeComponent();
             RegistrationViewModel registrationViewModel = new RegistrationViewModel();
             this.DataContext = registrationViewModel;
+            registrationViewModel.ChangeWindowEvent += ChangeWindow;
+        }
+
+        public void ChangeWindow(object? sender, EventArgs e)
+        {
+            LoginPage loginPage = new();
+            MainWindow mainWindow = (MainWindow)Window.GetWindow(this);
+
+            if (mainWindow != null)
+            {
+                if (mainWindow.mainContent != null)
+                {
+                    mainWindow.mainContent.Content = loginPage;
+                }
+            }
         }
 
         private void ButtonCancel_Click(object sender, RoutedEventArgs e)
@@ -50,17 +65,13 @@ namespace WPFDemoPractice.UserControls
             textBoxLastName.Text = "";
             textBoxEmail.Text = "";
             textBoxAddress.Text = "";
-            passwordBox1.Text= "";
+            passwordBox1.Text = "";
             passwordBoxConfirm.Text = "";
         }
 
         private void ButtonSubmit_Click(object sender, RoutedEventArgs e)
         {
-            if(textBoxEmail.Text.Length == 0)
-            {
-                errormessage.Text = "Enter a Email...";
-                textBoxEmail.Focus();
-            }
+
         }
 
         private void ButtonLoginPage_Click(object sender, RoutedEventArgs e)
