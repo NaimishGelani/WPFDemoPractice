@@ -4,16 +4,16 @@
 winexe
 C#
 .cs
-C:\Users\pca63\Desktop\WPF\WPFDemoPractice\WPFDemoPractice\obj\Debug\net7.0-windows\
+C:\Users\pca63\Desktop\WPFDemoPractice\WPFDemoPractice\obj\Debug\net7.0-windows\
 WPFDemoPractice
 none
 false
 TRACE;DEBUG;NET;NET7_0;NETCOREAPP
-C:\Users\pca63\Desktop\WPF\WPFDemoPractice\WPFDemoPractice\App.xaml
+C:\Users\pca63\Desktop\WPFDemoPractice\WPFDemoPractice\App.xaml
 5450456268
 
-14914438448
-2251579294028
+19-271743286
+2261031317504
 MainWindow.xaml;UserControls\DashBoard.xaml;UserControls\ForgotPassword.xaml;UserControls\LoginPage.xaml;UserControls\Registration.xaml;
 
 False

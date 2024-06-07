@@ -1,8 +1,10 @@
-﻿using Microsoft.Identity.Client.NativeInterop;
+﻿using Dapper;
+using Microsoft.Identity.Client.NativeInterop;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -17,7 +19,7 @@ namespace WPFDemoPractice.ViewModel
 {
     internal partial class RegistrationViewModel : IDataErrorInfo, INotifyPropertyChanged
     {
-        private InsertData insertData;
+        private GetConnection getConnection;
         public event EventHandler? ChangeWindowEvent;
         protected virtual void OnChangeWindowEvent(EventArgs e)
         {
@@ -26,7 +28,7 @@ namespace WPFDemoPractice.ViewModel
 
         public RegistrationViewModel()
         {
-            insertData = new InsertData();
+            getConnection = new GetConnection();
         }
 
         private string firstName = string.Empty;
@@ -122,27 +124,30 @@ namespace WPFDemoPractice.ViewModel
 
         public string Error => string.Empty;
 
-        public string this[string PropertyName]
+        public string this[string propertyName]
         {
             get
             {
                 string errors = string.Empty;
-                switch (PropertyName)
+                switch (propertyName)
                 {
                     case "FirstName":
                         if (string.IsNullOrEmpty(FirstName)) errors = "firstname can not be empty";
-                        if (FirstName.Length < 3) errors = "firstname can not less then 3 characters";
-                        if (FirstName.Length > 15) errors = "firstname can not be more than 15 characters";
+                        //if (FirstName.Length < 3) errors = "firstname can not less then 3 characters";
+                        //if (FirstName.Length > 15) errors = "firstname can not be more than 15 characters";
+                        if (!IsValidName(FirstName)) errors = "FirstName must be between 2 to 15";
                         break;
                     case "LastName":
                         if (string.IsNullOrEmpty(LastName)) errors = "lastname can not be empty";
-                        if (LastName.Length < 3) errors = "lastname can not less then 3 characters";
-                        if (LastName.Length > 15) errors = "lastname can not be more than 15 characters";
+                        //if (LastName.Length < 3) errors = "lastname can not less then 3 characters";
+                        //if (LastName.Length > 15) errors = "lastname can not be more than 15 characters";
+                        if (!IsValidName(LastName)) errors = "LastName must be between 2 to 15";
                         break;
                     case "Password":
                         if (string.IsNullOrEmpty(Password)) errors = "password can not be empty";
-                        if (Password.Length < 8) errors = "password must be longer than 8 characters";
-                        if (password.Length > 20) errors = "password maximum limit reached";
+                        //if (Password.Length < 8) errors = "password must be longer than 8 characters";
+                        //if (password.Length > 20) errors = "password maximum limit reached";
+                        if (!IsValidPassword(Password)) errors = "password must be between 8 to 20";
                         break;
                     case "ConfirmPassword":
                         if (string.IsNullOrEmpty(ConfirmPassword)) errors = "confirmpassword can not be empty";
@@ -172,6 +177,29 @@ namespace WPFDemoPractice.ViewModel
             return Regex.IsMatch(emailAddress, regexPattern);
         }
 
+        private bool IsValidPassword(string password)
+        {
+            if (password.Length >= 8 && password.Length <= 20)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        private bool IsValidName(string name)
+        {
+            if (name.Length >= 2 && name.Length <= 15)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
 
         //private Registration registration;
 
@@ -198,39 +226,42 @@ namespace WPFDemoPractice.ViewModel
         //}
 
 
-
-
         private ICommand? addRegistrationCommand { get; set; }
 
         public ICommand? AddRegistrationCommand
         {
             get
             {
-                addRegistrationCommand ??= new RelayCommand(SubmitExecute, canSubmitExecute, false);
+                addRegistrationCommand ??= new RelayCommand(SubmitExecute, CanSubmitExecute, false);
                 return addRegistrationCommand;
             }
         }
 
         private void SubmitExecute(object parameter)
         {
-            Registration registration = new()
-            {
-                FirstName = FirstName,
-                LastName = LastName,
-                Email = Email,
-                Address = Address,
-                Password = Password
-            };
-            bool isSave = insertData.RegistrationData(registration);
-            if (isSave)
+            var parameters = new DynamicParameters();
+            parameters.Add("@FirstName", FirstName);
+            parameters.Add("@LastName", LastName);
+            parameters.Add("@EmailId", Email);
+            parameters.Add("@Password", Password);
+            parameters.Add("@Address", Address);
+            parameters.Add("@Result", dbType: DbType.String, direction: ParameterDirection.Output, size: 3);
+
+            getConnection.ExecuteStoredProcedureSingle<string>("sp_InsertUserData", parameters);
+            string result = parameters.Get<string>("@Result");
+            if (result == "Yes")
             {
                 OnChangeWindowEvent(EventArgs.Empty);
             }
+            else
+            {
+                MessageBox.Show("register not successfull.");
+            }
         }
 
-        private bool canSubmitExecute(object parameter)
+        private bool CanSubmitExecute(object parameter)
         {
-            if (string.IsNullOrEmpty(FirstName) || string.IsNullOrEmpty(LastName) || string.IsNullOrEmpty(Email) || string.IsNullOrEmpty(Password) || string.IsNullOrEmpty(ConfirmPassword) || string.IsNullOrEmpty(Address))
+            if (string.IsNullOrEmpty(FirstName) || string.IsNullOrEmpty(LastName) || string.IsNullOrEmpty(Email) || string.IsNullOrEmpty(Password) || string.IsNullOrEmpty(ConfirmPassword) || string.IsNullOrEmpty(Address) || !string.Equals(Password, ConfirmPassword) || !IsValidPassword(Password) || !IsValidName(FirstName) || !IsValidName(LastName))
             {
                 return false;
             }
@@ -238,7 +269,6 @@ namespace WPFDemoPractice.ViewModel
             {
                 return true;
             }
-
         }
 
         public event PropertyChangedEventHandler? PropertyChanged;

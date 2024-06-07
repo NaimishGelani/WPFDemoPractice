@@ -15,7 +15,7 @@ namespace WPFDemoPractice.DataBase
 {
     internal class GetData
     {
-        protected GetConnection connection = new GetConnection();
+        protected GetConnection connection = new();
 
         public string ExecuteLogin(string username, string password)
         {
@@ -26,10 +26,10 @@ namespace WPFDemoPractice.DataBase
             try
             {
                 // create connection and command
-                using (SqlConnection conn = new(connection.GetConnectionString()))
+                using (SqlConnection con = new(connection.GetConnectionString()))
                 {
-                    conn.Open();
-                    using (SqlCommand command = new(query, conn))
+                    con.Open();
+                    using (SqlCommand command = new(query, con))
                     {
                         command.Parameters.AddWithValue("@Email", username);
                         command.Parameters.AddWithValue("@Password", password);
@@ -50,6 +50,38 @@ namespace WPFDemoPractice.DataBase
             {
                 MessageBox.Show("Error in fetching data from database", "Error");
                 return string.Empty;
+            }
+        }
+
+        public void ExecuteStoredProcedure(string procedureName, string email, string password)
+        {
+            string code = string.Empty;
+
+            if (string.IsNullOrEmpty(procedureName))
+                MessageBox.Show("Error in fetching data from storeprocedure", "Error");
+
+            using (SqlConnection con = new(connection.GetConnectionString()))
+            {
+                con.Open();
+                using (SqlCommand cmd = new(procedureName, con))
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
+
+                    // Add parameters to the command if provided
+
+                    cmd.Parameters.Add("@Email", SqlDbType.NVarChar, 100).Value = email;
+                    cmd.Parameters.Add("@Password", SqlDbType.NVarChar, 100).Value = password;
+                    cmd.Parameters.Add("@Code", SqlDbType.NVarChar, 100).Direction = ParameterDirection.Output;
+
+                    cmd.ExecuteNonQuery();
+                    string emailId = Convert.ToString(cmd.Parameters["@Code"].Value);
+                    using (SqlDataAdapter adapter = new(cmd))
+                    {
+                        DataTable dataTable = new();
+                        adapter.Fill(dataTable);
+                        con.Close();
+                    }
+                }
             }
         }
     }

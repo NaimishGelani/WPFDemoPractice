@@ -34,7 +34,6 @@ namespace WPFDemoPractice.Commands
             }
         }
 
-
         public bool CanExecute(object? parameter)
         {
             if (canExecute == null)

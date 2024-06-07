@@ -1,11 +1,12 @@
 {
   "version": 2,
-  "dgSpecHash": "eGk1d0l2Zfk1f8WQBinWFAoOzOgBcjGvkBv2HvdNkqsz9suHmHLP5RO/Y/LAeHOwLxXT4mFy8itUTwTap+klkw==",
+  "dgSpecHash": "ozHJhZHIwwsdWj8H3P9p35F9z0W68FMXrrL4C7kYNRZZ/s+mrr+UOhi3mssBow8PIK/4zGIgYps0UYYjbyKVZw==",
   "success": true,
-  "projectFilePath": "C:\\Users\\pca63\\Desktop\\WPF\\WPFDemoPractice\\WPFDemoPractice\\WPFDemoPractice.csproj",
+  "projectFilePath": "C:\\Users\\pca63\\Desktop\\WPFDemoPractice\\WPFDemoPractice\\WPFDemoPractice.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\pca63\\.nuget\\packages\\azure.core\\1.35.0\\azure.core.1.35.0.nupkg.sha512",
     "C:\\Users\\pca63\\.nuget\\packages\\azure.identity\\1.10.3\\azure.identity.1.10.3.nupkg.sha512",
+    "C:\\Users\\pca63\\.nuget\\packages\\dapper\\2.1.35\\dapper.2.1.35.nupkg.sha512",
     "C:\\Users\\pca63\\.nuget\\packages\\microsoft.bcl.asyncinterfaces\\1.1.1\\microsoft.bcl.asyncinterfaces.1.1.1.nupkg.sha512",
     "C:\\Users\\pca63\\.nuget\\packages\\microsoft.csharp\\4.5.0\\microsoft.csharp.4.5.0.nupkg.sha512",
     "C:\\Users\\pca63\\.nuget\\packages\\microsoft.data.sqlclient\\5.2.0\\microsoft.data.sqlclient.5.2.0.nupkg.sha512",

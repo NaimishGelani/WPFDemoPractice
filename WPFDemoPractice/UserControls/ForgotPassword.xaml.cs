@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using WPFDemoPractice.ViewModel;
 
 namespace WPFDemoPractice.UserControls
 {
@@ -23,7 +24,23 @@ namespace WPFDemoPractice.UserControls
         public ForgotPassword()
         {
             InitializeComponent();
+            ForgotPasswordViewModel forgotPasswordViewModel = new();
+            this.DataContext = forgotPasswordViewModel;
+            forgotPasswordViewModel.ChangeWindowEvent += ChangeWindow;
+        }
 
+        public void ChangeWindow(object? sender, EventArgs e)
+        {
+            LoginPage loginPage = new();
+            MainWindow mainWindow = (MainWindow)Window.GetWindow(this);
+
+            if (mainWindow != null)
+            {
+                if (mainWindow.mainContent != null)
+                {
+                    mainWindow.mainContent.Content = loginPage;
+                }
+            }
         }
 
         private void ForgotButton_Click(object sender, RoutedEventArgs e)
@@ -31,9 +48,10 @@ namespace WPFDemoPractice.UserControls
 
         }
 
-        private void LoginButton_Click(object sender, RoutedEventArgs e)
+        private void BackToLoginButton_Click(object sender, RoutedEventArgs e)
         {
-
+            MainWindow mainWindow = (MainWindow)Window.GetWindow(this);
+            mainWindow.mainContent.Content = new LoginPage();
         }
     }
 }

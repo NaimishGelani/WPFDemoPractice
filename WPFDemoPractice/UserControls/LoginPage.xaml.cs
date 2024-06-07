@@ -72,6 +72,10 @@ namespace WPFDemoPractice.UserControls
             mainWindow.mainContent.Content = new Registration();
         }
 
-        
+        private void ForgotPassword_Click(object sender, RoutedEventArgs e)
+        {
+            MainWindow mainWindow = (MainWindow)Window.GetWindow(this);
+            mainWindow.mainContent.Content = new ForgotPassword();
+        }
     }
 }

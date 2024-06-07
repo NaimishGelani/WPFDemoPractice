@@ -6,9 +6,8 @@
         xmlns:local="clr-namespace:WPFDemoPractice.UserControls"
         mc:Ignorable="d"
         WindowStartupLocation="CenterScreen"
-        Title="MainWindow" Height="450" Width="800" Icon="C:\Users\pca63\Desktop\WPF\WPFDemoPractice\WPFDemoPractice\Icons\AppLogo.ico">
+        Title="StudentManagementSystem" Height="450" Width="800" Icon="C:\Users\pca63\Desktop\WPF\WPFDemoPractice\WPFDemoPractice\Icons\AppLogo.ico">
     <Window.Resources>
-        
         <!--solid colors-->
         <SolidColorBrush x:Key="backGroudColor" Color="SteelBlue"></SolidColorBrush>
         <SolidColorBrush x:Key="gridBackGroundColor" Color="LightPink"></SolidColorBrush>
