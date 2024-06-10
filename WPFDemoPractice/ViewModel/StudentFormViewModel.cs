@@ -15,13 +15,13 @@ using WPFDemoPractice.DataBase;
 using System.Windows;
 using System.Collections.ObjectModel;
 using WPFDemoPractice.Model;
+using System.Runtime.CompilerServices;
 
 namespace WPFDemoPractice.ViewModel
 {
     internal class StudentFormViewModel : IDataErrorInfo, INotifyPropertyChanged
     {
         private GetConnection getConnection;
-
 
         public StudentFormViewModel()
         {
@@ -38,12 +38,28 @@ namespace WPFDemoPractice.ViewModel
             set { _today = value; }
         }
 
+        private int _studentId = 0;
+
+        public int StudentId
+        {
+            get { return _studentId; }
+            set
+            {
+                _studentId = value;
+                OnChangedProperty("StudentId");
+            }
+        }
+
         private string _studentName = string.Empty;
 
         public string StudentName
         {
             get { return _studentName; }
-            set { _studentName = value; }
+            set
+            {
+                _studentName = value;
+                OnChangedProperty("StudentName");
+            }
         }
 
         private string _fatherName = string.Empty;
@@ -51,56 +67,88 @@ namespace WPFDemoPractice.ViewModel
         public string FatherName
         {
             get { return _fatherName; }
-            set { _fatherName = value; }
+            set
+            {
+                _fatherName = value;
+                OnChangedProperty("FatherName");
+            }
         }
 
         private string _surname = string.Empty;
         public string Surname
         {
             get { return _surname; }
-            set { _surname = value; }
+            set
+            {
+                _surname = value;
+                OnChangedProperty("Surname");
+            }
         }
 
         private DateTime _dob = DateTime.Now.Date;
         public DateTime Dob
         {
             get { return _dob; }
-            set { _dob = value; }
+            set
+            {
+                _dob = value;
+
+            }
         }
 
         private int _age = 0;
         public int Age
         {
             get { return _age; }
-            set { _age = value; }
+            set
+            {
+                _age = value;
+                OnChangedProperty("Age");
+            }
         }
 
         private string _gender = "Male";
         public string Gender
         {
             get { return _gender; }
-            set { _gender = value; }
+            set
+            {
+                _gender = value;
+                OnChangedProperty("Gender");
+            }
         }
 
         private string _address = string.Empty;
         public string Address
         {
             get { return _address; }
-            set { _address = value; }
+            set
+            {
+                _address = value;
+                OnChangedProperty("Address");
+            }
         }
 
         private string _contactNo = string.Empty;
         public string ContactNo
         {
             get { return _contactNo; }
-            set { _contactNo = value; }
+            set
+            {
+                _contactNo = value;
+                OnChangedProperty("ContactNo");
+            }
         }
 
         private int _standard = 0;
         public int Standard
         {
             get { return _standard; }
-            set { _standard = value; }
+            set
+            {
+                _standard = value;
+                OnChangedProperty("Standard");
+            }
         }
 
 
@@ -176,12 +224,13 @@ namespace WPFDemoPractice.ViewModel
         }
 
 
+        public StudentsModel Student { get; set; }
 
         /// <summary>
         /// student List
         /// </summary>
 
-        private ObservableCollection<StudentsModel> studentList = new() ;
+        private ObservableCollection<StudentsModel> studentList = new();
 
         public ObservableCollection<StudentsModel> StudentList
         {
@@ -196,15 +245,48 @@ namespace WPFDemoPractice.ViewModel
             }
         }
 
-
         public ObservableCollection<StudentsModel> StudentData()
         {
             DynamicParameters dynamicParameters = new();
             return getConnection.ExecuteStoredProcedure<StudentsModel>("sp_GetStudentDataList", dynamicParameters);
         }
 
+
         /// <summary>
-        /// Create command for Save Butoon.
+        /// clear command.
+        /// </summary>
+        private ICommand? clearCommand { get; set; }
+
+        public ICommand? ClearCommand
+        {
+            get
+            {
+                clearCommand = new RelayCommand(ClearExecute, CanClearExecute, false);
+                return clearCommand;
+            }
+        }
+
+        private void ClearExecute(object parameter)
+        {
+            StudentId = 0;
+            StudentName = string.Empty;
+            FatherName = string.Empty;
+            Surname = string.Empty;
+            Age = 0;
+            ContactNo = string.Empty;
+            Address = string.Empty;
+            Standard = 0;
+            Gender = "Male";
+            Dob = DateTime.Now.Date;
+        }
+
+        private bool CanClearExecute(object parameter)
+        {
+            return true;
+        }
+
+        /// <summary>
+        /// Create Or Update Data command  for Save Butoon.
         /// </summary>
         private ICommand? addStudentCommand { get; set; }
         public ICommand? AddStudentCommand
@@ -219,6 +301,7 @@ namespace WPFDemoPractice.ViewModel
         private void SaveExecute(object param)
         {
             DynamicParameters parameters = new();
+            parameters.Add("@StudentId", StudentId);
             parameters.Add("@StudentName", StudentName);
             parameters.Add("@Surname", Surname);
             parameters.Add("@FatherName", FatherName);
@@ -229,7 +312,7 @@ namespace WPFDemoPractice.ViewModel
             parameters.Add("@ContactNo", ContactNo);
             parameters.Add("@Standard", Standard);
             parameters.Add("@Result", dbType: DbType.String, direction: ParameterDirection.Output, size: 3);
-            getConnection.ExecuteStoredProcedureSingle<string>("sp_InsertStudentData", parameters);
+            getConnection.ExecuteStoredProcedureSingle<string>("sp_InsertOrUpdateStudentData", parameters);
             string result = parameters.Get<string>("@Result");
             if (result == "Yes")
             {
@@ -245,7 +328,7 @@ namespace WPFDemoPractice.ViewModel
 
         private bool CanSaveExecute(object parameter)
         {
-            if (string.IsNullOrEmpty(StudentName) || string.IsNullOrEmpty(Surname) || string.IsNullOrEmpty(FatherName) || string.IsNullOrEmpty(ContactNo) || string.IsNullOrEmpty(Address) || !IsValidNumber(ContactNo) || !IsValidStandard(Standard) || !IsValidAge(Age) || !IsValidAddress(Address) || !IsValidName(Surname) || !IsValidName(FatherName) || !IsValidName(StudentName))
+            if (string.IsNullOrEmpty(StudentName) || string.IsNullOrEmpty(Surname) || string.IsNullOrEmpty(FatherName) || string.IsNullOrEmpty(ContactNo) || string.IsNullOrEmpty(Address) || Standard == 0 || !IsValidNumber(ContactNo) || !IsValidStandard(Standard) || !IsValidAge(Age) || !IsValidAddress(Address) || !IsValidName(Surname) || !IsValidName(FatherName) || !IsValidName(StudentName))
             {
                 return false;
             }
@@ -256,9 +339,117 @@ namespace WPFDemoPractice.ViewModel
         }
 
         /// <summary>
+        /// Update Command.
+        /// </summary>
+        private ICommand? updateCommand { get; set; }
+
+        public ICommand? UpdateCommand
+        {
+            get
+            {
+                updateCommand = new RelayCommand(UpdateExecute, CanUpdateExecute, false);
+                return updateCommand;
+            }
+        }
+
+        private void UpdateExecute(object parameter)
+        {
+            EditData();
+        }
+
+        private bool CanUpdateExecute(object parameter)
+        {
+            return true;
+        }
+
+
+        public void EditData()
+        {
+            var student = StudentData().Where(x => x.StudentId == Student.StudentId).FirstOrDefault();
+            if (student != null)
+            {
+                StudentId = student.StudentId;
+                StudentName = student.StudentName;
+                FatherName = student.FatherName;
+                Surname = student.Surname;
+                Age = student.Age;
+                ContactNo = student.ContactNo;
+                Address = student.Address;
+                Standard = student.Standard;
+                Gender = student.Gender;
+                Dob = student.Dob;
+            }
+        }
+
+        /// <summary>
+        /// Delete student record command.
+        /// </summary>
+        private ICommand? deleteCommand { get; set; }
+
+        public ICommand? DeleteCommand
+        {
+            get
+            {
+                deleteCommand = new RelayCommand(DeleteExecute, CanDeleteExecute, false);
+                return deleteCommand;
+            }
+        }
+
+        private void DeleteExecute(object parameter)
+        {
+            DynamicParameters parameters = new();
+            parameters.Add("@Id", Student.StudentId);
+            parameters.Add("@Result", dbType: DbType.Int32, direction: ParameterDirection.Output);
+            getConnection.ExecuteStoredProcedureSingle<string>("sp_DeleteStudentRecord", parameters);
+            int result = parameters.Get<Int32>("@Result");
+            switch (result)
+            {
+                case 0:
+                    MessageBox.Show("error while delete data in database.");
+                    break;
+                case 1:
+                    MessageBox.Show("delete successfully....");
+                    break;
+                case 2:
+                    MessageBox.Show("Id Not Found...");
+                    break;
+            }
+            studentList = StudentData();
+            OnChangedProperty("StudentList");
+        }
+
+        private bool CanDeleteExecute(object parameter)
+        {
+            return true;
+        }
+
+        private ICommand? multipleDeleteCommand { get; set; }
+
+        public ICommand? MultipleDeleteCommand
+        {
+            get
+            {
+                multipleDeleteCommand = new RelayCommand(MultipleDeleteExecute, CanMutipleDeleteExecute, false);
+                return multipleDeleteCommand;
+            }
+        }
+
+        private bool CanMutipleDeleteExecute(object arg)
+        {
+            return true;
+        }
+
+        private void MultipleDeleteExecute(object obj)
+        {
+
+        }
+
+
+        /// <summary>
         /// INotifyPropertyChanged.
         /// </summary>
         public event PropertyChangedEventHandler? PropertyChanged;
+
         protected void OnChangedProperty(string propertyName)
         {
             if (PropertyChanged != null)
@@ -266,5 +457,28 @@ namespace WPFDemoPractice.ViewModel
                 PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
             }
         }
+
+
+        private bool _isSelectAll;
+
+        public bool IsSelectAll
+        {
+            get { return _isSelectAll; }
+            set
+            {
+                _isSelectAll = value;
+                OnChangedProperty("IsSelectAll");
+                SelectAllItems(value);
+            }
+        }
+
+        private void SelectAllItems(bool selectAll)
+        {
+            foreach (var item in StudentList)
+            {
+                item.IsChecked = selectAll;
+            }
+        }
+
     }
 }

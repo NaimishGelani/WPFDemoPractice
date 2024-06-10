@@ -25,20 +25,21 @@ namespace WPFDemoPractice.UserControls
         public DashBoard()
         {
             InitializeComponent();
-            StudentFormViewModel studentFormViewModel = new StudentFormViewModel();
+            StudentFormViewModel studentFormViewModel = new();
             this.DataContext = studentFormViewModel;
         }
 
         private void Clear()
         {
-            TextBoxStudentName.Text = "";
-            TextBoxAddress.Text = "";
-            TextBoxAge.Text = "";
-            TextBoxFatherName.Text = "";
-            TextBoxSurname.Text = "";
-            TextBoxStandard.Text = "";
-            DoBDatePicker.Text = "";
-            TextBoxContact.Text = "";
+            //TextBoxStudentName.Text = "";
+            //TextBoxAddress.Text = "";
+            //TextBoxAge.Text = "";
+            //TextBoxFatherName.Text = "";
+            //TextBoxSurname.Text = "";
+            //TextBoxStandard.Text = "";
+            //DoBDatePicker.Text = "";
+            //TextBoxContact.Text = "";
+            //TextBlockId.Text = "0";
         }
 
         private void CreateEmployeeButton_Click(object sender, RoutedEventArgs e)

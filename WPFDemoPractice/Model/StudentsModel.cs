@@ -9,18 +9,18 @@ namespace WPFDemoPractice.Model
 {
     internal class StudentsModel : INotifyPropertyChanged
     {
-        private int id;
+        private int studentId;
 
-        public int Id
+        public int StudentId
         {
             get
             {
-                return id;
+                return studentId;
             }
             set
             {
-                id = value;
-                OnPropertyChanged("Id");
+                studentId = value;
+                OnPropertyChanged("StudentId");
             }
         }
 
@@ -127,6 +127,15 @@ namespace WPFDemoPractice.Model
                 standard = value;
                 OnPropertyChanged("Standard");
             }
+        }
+
+
+        private bool _isChecked;
+
+        public bool IsChecked
+        {
+            get { return _isChecked; }
+            set { _isChecked = value; OnPropertyChanged("IsChecked"); }
         }
 
         public event PropertyChangedEventHandler? PropertyChanged;
